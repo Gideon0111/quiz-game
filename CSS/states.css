@@ -1,0 +1,129 @@
+/*============================================================
+   states.css — Modifier classes and data-state screen routing.
+ 
+   THE CORE RULE:
+   .screen { display: none }  hides ALL sections by default.
+   [data-state="X"] #screen-Y { display: flex } reveals exactly one.
+   These two rules together are the entire screen-switching system.
+   No JavaScript class toggling on sections is needed or allowed.
+   ============================================================ */
+ 
+ 
+/* ----------------------------------------------------------
+   VISIBILITY UTILITIES
+   ---------------------------------------------------------- */
+ 
+/* .hidden is for INLINE elements only (buttons, labels, paragraphs).
+   NEVER add .hidden to a <section> — use data-state for sections. */
+.hidden {
+  display: none !important;
+}
+.screen {
+  display: none;
+}
+/* Fade out (use with JS: remove .hidden after toggling .visible) */
+.invisible {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
+
+[data-state="start"]    #screen-start    { display: flex; }
+[data-state="category"] #category-screen { display: flex; }
+[data-state="quiz"] #screen-question { display: flex; }
+
+
+
+
+/* ----------------------------------------------------------
+   CHOICE ITEM STATES
+   Applied by JS after the player selects an answer
+   ---------------------------------------------------------- */
+
+/* Locked — no more interaction once answered */
+.choice-item.locked {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Player selected this option (before reveal) */
+.choice-item.selected {
+  border-color: var(--color-primary);
+  background:   color-mix(in srgb, var(--color-primary) 8%, transparent);
+  box-shadow:   var(--shadow-sm);
+}
+
+.choice-item.selected .choice-item__letter {
+  border-color:     var(--color-primary);
+  background:       var(--color-primary);
+  color:            #ffffff;
+}
+
+/* Correct answer revealed */
+.choice-item.correct {
+  border-color: var(--color-correct);
+  background:   var(--color-correct-bg);
+  animation:    pop-correct var(--transition-medium) ease both;
+}
+
+.choice-item.correct .choice-item__letter {
+  border-color:     var(--color-correct);
+  background:       var(--color-correct);
+  color:            #ffffff;
+}
+
+/* Wrong answer revealed */
+.choice-item.wrong {
+  border-color: var(--color-wrong);
+  background:   var(--color-wrong-bg);
+  animation:    shake-wrong var(--transition-medium) ease both;
+}
+
+.choice-item.wrong .choice-item__letter {
+  border-color:     var(--color-wrong);
+  background:       var(--color-wrong);
+  color:            #ffffff;
+}
+
+/* ----------------------------------------------------------
+   DATA-STATE — declarative screen states driven from JS
+   Usage:  document.getElementById('app').dataset.state = 'question'
+   ---------------------------------------------------------- */
+
+/* ----------------------------------------------------------
+   ANIMATION ENTRY STATES
+   Add these classes via JS to trigger entry animations
+   ---------------------------------------------------------- */
+
+.animate-slide-up {
+  animation: slide-up var(--transition-medium) ease both;
+}
+
+.animate-fade-in {
+  animation: fade-in var(--transition-medium) ease both;
+}
+
+.animate-bounce-in {
+  animation: bounce-in var(--transition-slow) cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Stagger: add .stagger to a parent; children animate in sequence */
+.stagger > *:nth-child(1) { animation-delay: 0ms;   }
+.stagger > *:nth-child(2) { animation-delay: 60ms;  }
+.stagger > *:nth-child(3) { animation-delay: 120ms; }
+.stagger > *:nth-child(4) { animation-delay: 180ms; }
+
+/* ----------------------------------------------------------
+   REDUCED MOTION — respect user preferences
+   ---------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+  }
+}

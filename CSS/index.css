@@ -1,0 +1,22 @@
+/* ============================================================
+   index.css — Entry point. Imports every layer in cascade order.
+   This is the ONLY file linked in index.html.
+   <link rel="stylesheet" href="styles/index.css">
+   ============================================================ */
+/* 1. Tokens must come first — everything else depends on them */
+@import "./variable.css";  
+
+/* 2. Reset & base typography before any component touches a tag */
+@import "./base.css";
+
+/* 3. Screen containers and grid before components sit inside them */
+@import "./layout.css";
+
+/* 4. UI building blocks */
+@import "./components.css";
+
+/* 5. @keyframes definitions (components reference these by name) */
+@import "./animations.css";
+
+/* 6. Modifier states layered on top of everything */
+@import "./states.css";

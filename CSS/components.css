@@ -1,0 +1,337 @@
+/* ============================================================
+   components.css — All UI building blocks.
+   No inline styles exist in index.html. Every visual property
+   that was previously written inline now lives as a named class here.
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-8);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--transition-fast),
+    transform        var(--transition-fast),
+    box-shadow       var(--transition-fast);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn--ghost:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION CARD — the white rounded container
+   ---------------------------------------------------------- */
+
+.question-card {
+  width: 100%;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-8) var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+/* Modifier: centred layout variant (start screen, category screen) */
+.question-card--centered {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* ----------------------------------------------------------
+   START SCREEN TYPOGRAPHY
+   Previously: style="..." on h1 and p inside the start card.
+   Now: named classes that live here.
+   ---------------------------------------------------------- */
+
+.start-title {
+  font-size: var(--fs-2xl);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.start-subtitle {
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
+  line-height: var(--lh-base);
+  max-width: 38ch;
+  margin: 0 auto var(--space-8);
+  text-align: center;
+}
+
+
+/* ----------------------------------------------------------
+   SCREEN HEADING — used on category screen h2
+   Previously: no class, styled implicitly via h2 base rules.
+   Now: explicit so it can be adjusted without touching base.css.
+   ---------------------------------------------------------- */
+
+.screen-heading {
+  font-size: var(--fs-xl);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+}
+
+
+/* ----------------------------------------------------------
+   COURSE LABEL — category name shown above the question
+   Previously written as a long inline style on #js-course-title.
+   ---------------------------------------------------------- */
+
+.course-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+
+/* ----------------------------------------------------------
+   QUESTION TEXT
+   ---------------------------------------------------------- */
+
+.question-text {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+  max-width: 100%;
+}
+
+/* ----------------------------------------------------------
+   CHOICE ITEM — individual answer option button
+   ---------------------------------------------------------- */
+
+.choice-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  text-align: left;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    border-color     var(--transition-fast),
+    background-color var(--transition-fast),
+    transform        var(--transition-fast),
+    box-shadow       var(--transition-fast);
+}
+
+.choice-item:hover:not([disabled]) {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(2px);
+}
+
+.choice-item:active:not([disabled]) {
+  transform: translateX(0);
+}
+
+/* Letter badge (A, B, C, D) inside each choice */
+.choice-item__letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  transition: inherit;
+}
+
+
+/* ----------------------------------------------------------
+   QUESTION COUNTER
+   Previously written as inline styles on the <span>.
+   ---------------------------------------------------------- */
+
+.question-counter {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+
+/* ----------------------------------------------------------
+   FEEDBACK TEXT — "Correct!" / "Wrong!" line below the card
+   Previously: style="font-weight: var(--fw-bold); text-align: center; ..."
+   ---------------------------------------------------------- */
+
+.feedback-text {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  min-height: 1.6em;   /* reserves space so the layout doesn't jump */
+  color: var(--color-text);
+}
+
+.score-text {
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--color-text-muted);
+  min-height: 1.4em;
+}
+
+/* ----------------------------------------------------------
+   SCORE BADGE — large score display on the result modal
+   ---------------------------------------------------------- */
+
+.score-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-8);
+  border-radius: var(--radius-card);
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-lg);
+}
+
+.score-badge__number {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.score-badge__label {
+  font-size: var(--fs-sm);
+  opacity: 0.85;
+}
+
+
+/* ----------------------------------------------------------
+   MODAL OVERLAY + CARD (injected at runtime by ui.js)
+   ---------------------------------------------------------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: var(--z-modal);
+  opacity: 0;
+  transition: opacity var(--transition-medium);
+}
+
+.modal-overlay--visible {
+  opacity: 1;
+}
+
+.modal-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--space-8) var(--space-6);
+  max-width: 440px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(20px);
+  transition: transform var(--transition-medium);
+}
+
+.modal-overlay--visible .modal-card {
+  transform: translateY(0);
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+
+.modal-message {
+  font-size: var(--fs-base);
+  color: var(--color-text-muted);
+  line-height: var(--lh-base);
+  margin-bottom: var(--space-6);
+  max-width: 100%;
+  justify-content: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+@media (max-width: 400px) {
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+  .modal-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

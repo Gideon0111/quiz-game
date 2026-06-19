@@ -1,0 +1,85 @@
+:root {
+  /* Brand */
+  --color-primary:        #4a90e2;
+  --color-primary-dark:   #2c6fbd;
+  --color-primary-light:  #7cb3f0;
+
+  /* Feedback */
+  --color-correct:        #2ecc71;
+  --color-correct-bg:     #d4f7e4;
+  --color-wrong:          #e74c3c;
+  --color-wrong-bg:       #fce4e2;
+
+  /* Neutral surface scale */
+  --color-bg:             #f5f6fa;
+  --color-surface:        #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border:         #e0e3ee;
+
+  /* Text scale */
+  --color-text:           #1a1d2e;
+  --color-text-muted:     #5a5f7a;
+  --color-text-subtle:    #9298b0;
+
+/* TYPOGRAPHY */
+  --font-body:   'Inter', system-ui, sans-serif;
+  --font-display: 'Poppins', 'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Scale — major third (1.25) */
+  --fs-xs:   0.64rem;   /* 10px */
+  --fs-sm:   0.8rem;    /* 13px */
+  --fs-base: 1rem;      /* 16px */
+  --fs-md:   1.25rem;   /* 20px */
+  --fs-lg:   1.563rem;  /* 25px */
+  --fs-xl:   1.953rem;  /* 31px */
+  --fs-2xl:  2.441rem;  /* 39px */
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-bold:    700;
+
+  --lh-tight:  1.2;
+  --lh-base:   1.6;
+  --lh-loose:  1.8;
+
+/* SPACING  (4px base unit, powers of 2) */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+/*BORDER RADIUS*/
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-card: 16px;
+  --radius-pill: 999px;
+
+/* SHADOWS */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.08);
+  --shadow-card: 0 2px 8px rgba(74,144,226,.10);
+
+/* TRANSITIONS */
+  --transition-fast:   150ms ease;
+  --transition-medium: 300ms ease;
+  --transition-slow:   500ms ease;
+
+/* Z-INDEX SCALE */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+
+/* LAYOUT */
+  --max-width:   600px;  /* quiz card max width */
+  --header-h:    64px;
+}

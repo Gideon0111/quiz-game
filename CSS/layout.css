@@ -1,0 +1,133 @@
+/* ============================================================
+   layout.css — Screen containers, grid, and responsive rules.
+   Also owns layout utility classes that arrange groups of components.
+   ============================================================ */
+
+
+/* ----------------------------------------------------------
+   APP SHELL
+   ---------------------------------------------------------- */
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: var(--space-4);
+}
+
+
+/* ----------------------------------------------------------
+   SCREENS — each section is a "page" of the game
+   All screens are hidden by default in states.css via .screen { display: none }
+   data-state on #app reveals exactly one at a time.
+   ---------------------------------------------------------- */
+
+.screen {
+  width: 100%;
+  max-width: var(--max-width);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  flex: 1;
+  justify-content: center;
+  padding-block: var(--space-8);
+  /* NOTE: display is controlled by states.css, not here.
+     Do not set display: flex here — it would override the .screen { display: none } rule. */
+}
+
+
+/* ----------------------------------------------------------
+   QUIZ HEADER — progress bar row
+   ---------------------------------------------------------- */
+
+.quiz-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-pill);
+  transition: width var(--transition-medium);
+  /* width is set dynamically by JavaScript — the one valid use of inline style */
+}
+
+
+/* ----------------------------------------------------------
+   CHOICE GRID — answer options layout
+   ---------------------------------------------------------- */
+
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+@media (min-width: 480px) {
+  .choices-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+/* ----------------------------------------------------------
+   BTN STACK
+   Previously written as:  style="display: flex; flex-direction: column; gap: var(--space-3);"
+   Used on the category screen to stack the three category buttons vertically.
+   ---------------------------------------------------------- */
+
+.btn-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+/* On wider screens, the category buttons can sit side by side */
+@media (min-width: 480px) {
+  .btn-stack {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+
+/* ----------------------------------------------------------
+   ACTION ROW
+   Previously written as:  style="display: flex; gap: var(--space-3); justify-content: center;"
+   Holds the Submit and Next Question buttons on the question screen.
+   ---------------------------------------------------------- */
+
+.action-row {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  width: 100%;
+}
+
+
+/* ----------------------------------------------------------
+   RESPONSIVE CARD PADDING
+   ---------------------------------------------------------- */
+
+@media (min-width: 600px) {
+  .question-card {
+    padding: var(--space-10) var(--space-8);
+  }
+}
