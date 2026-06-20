@@ -3,6 +3,8 @@ const choicesElement = document.querySelector('#js-choices');
 const nextBtn = document.getElementById("next-btn");
 const submitBtn = document.getElementById("submit-btn");
 const backBtn = document.getElementById("back-btn");
+const questionCounterElement = document.querySelector('#question-counter'); 
+const progressFillElement = document.querySelector('#progress-fill'); 
 
 //ANNOUNCE QUESTION AND RESULT 
 questionElement.setAttribute("aria-live", "polite");
@@ -22,19 +24,29 @@ choicesElement.addEventListener('click', (event) => {
 
   document.querySelectorAll('.choice-item').forEach((btn) => {
     btn.classList.remove('selected');
+    btn.setAttribute('aria-checked', 'false'); 
   });
   button.classList.add('selected');
+  button.setAttribute('aria-checked', 'true'); 
 
   const choice = button.dataset.choice; // NEW — read the choice off the DOM instead of a closure
-
   if (currentChoiceHandler) {
     currentChoiceHandler(choice);
   }
   });
 
-  export function renderQuestion(question, handleChoiceSelection, isLastQuestion, selectedAnswer, showBackButton, handleBackCallback) {
+  export function renderQuestion(question, handleChoiceSelection, isLastQuestion,selectedAnswer, showBackButton, handleBackCallback, currentQuestionNumber, totalQuestions) {
   questionElement.textContent = question.question;
   choicesElement.innerHTML = '';
+
+  // Drive the progress indicator from real data
+  if (questionCounterElement && totalQuestions) {
+    questionCounterElement.textContent = `Question ${currentQuestionNumber} of ${totalQuestions}`;
+  }
+  if (progressFillElement && totalQuestions) {
+    const percent = Math.round((currentQuestionNumber / totalQuestions) * 100);
+    progressFillElement.style.width = `${percent}%`;
+  }
 
   // BACK BUTTON
   backBtn.classList.toggle("hidden", !showBackButton);
@@ -88,6 +100,9 @@ export function showResults(score, total, onPlayAgain) {
   nextBtn.classList.add("hidden");
   submitBtn.classList.add("hidden");
   backBtn.classList.add("hidden");
+
+  if (questionCounterElement) questionCounterElement.textContent = "Quiz Complete"; // NEW
+  if (progressFillElement) progressFillElement.style.width = "100%";               
 
   if (currentBackHandler) {
     backBtn.removeEventListener('click', currentBackHandler);

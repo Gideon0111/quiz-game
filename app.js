@@ -3,7 +3,6 @@ import { startQuiz, handleNext, handleSubmit } from "./quizEngine.js";
 import { updateState, resetState } from "./stateManager.js";
 import { showConfirmationPopup } from "./ui.js";
 
-
 //START SCREEN - SELECT CATEGORY SCREEN
 const startBtn = document.getElementById("btn-start");
 startBtn.addEventListener("click", () => {

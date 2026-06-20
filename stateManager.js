@@ -28,4 +28,3 @@ export function resetState() {
   state.selectedCategory = null; 
   state.answers = [];
 }
-

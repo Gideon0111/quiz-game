@@ -13,14 +13,13 @@ export function startQuiz () {
 }
 
 function renderCurrentQuestion() {
-
   const savedAnswer = state.answers[state.currentQuestionIndex] || null;
   updateState("selectedAnswer", savedAnswer);
   
   const currentQuestion = state.activeQuestions[state.currentQuestionIndex];
   const isLastQuestion = state.currentQuestionIndex === state.activeQuestions.length - 1;
 
-  renderQuestion(currentQuestion, handleChoiceSelection, isLastQuestion, savedAnswer, state.currentQuestionIndex > 0, handleBack);
+  renderQuestion(currentQuestion, handleChoiceSelection, isLastQuestion, savedAnswer, state.currentQuestionIndex > 0, handleBack, state.currentQuestionIndex + 1, state.activeQuestions.length);
 }
 
 export function handleBack() {
