@@ -10,32 +10,105 @@ const progressFillElement = document.querySelector('#progress-fill');
 questionElement.setAttribute("aria-live", "polite");
 questionElement.setAttribute("aria-atomic", "true");
 
-//CHOICE BTN
 choicesElement.setAttribute("role", "radiogroup");
 choicesElement.setAttribute("aria-label", "Answer choices");
 
 let currentBackHandler = null; 
-let currentChoiceHandler = null; // NEW
+let currentChoiceHandler = null; 
+let _transitionDirection = "init"; // "init" | "forward" | "back"
 
-//REMOVING E.LISTENER FROM EVERY CHOICE BUTTON 
+export function setTransitionDirection(direction) {
+  _transitionDirection = direction;
+}
+
+export function triggerShake(element) {
+  if (!element) return;
+  element.classList.remove("shake");
+  void element.offsetWidth; 
+  element.classList.add("shake");
+  element.addEventListener("animationend", () => {
+    element.classList.remove("shake");
+  }, { once: true });
+}
+
+export function enableNavigationButton(isLastQuestion) {
+  if (isLastQuestion) {
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("btn--disabled");
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.classList.remove("btn--disabled");
+  }
+}
+
+//REMOVING E.LISTENER FROM EVERY CHOICE BUTTON
 choicesElement.addEventListener('click', (event) => {
   const button = event.target.closest('.choice-item');
-  if (!button) return; // defensive check — ignore clicks that aren't on a choice
+  if (!button) return; // defensive guard
 
   document.querySelectorAll('.choice-item').forEach((btn) => {
-    btn.classList.remove('selected');
+    btn.classList.remove('selected', 'pulse');
     btn.setAttribute('aria-checked', 'false'); 
   });
   button.classList.add('selected');
   button.setAttribute('aria-checked', 'true'); 
 
+  // Pulse only on real user click, not on state-restored selections
+  void button.offsetWidth;
+  button.classList.add('pulse');
+  button.addEventListener('animationend', () => {
+    button.classList.remove('pulse');
+  }, { once: true });
+
   const choice = button.dataset.choice; // NEW — read the choice off the DOM instead of a closure
-  if (currentChoiceHandler) {
-    currentChoiceHandler(choice);
-  }
+  if (currentChoiceHandler) currentChoiceHandler(choice);
   });
 
-  export function renderQuestion(question, handleChoiceSelection, isLastQuestion,selectedAnswer, showBackButton, handleBackCallback, currentQuestionNumber, totalQuestions) {
+export function showLoading() {
+  questionElement.classList.remove("question--forward", "question--back", "question--init", "results-reveal");
+  questionElement.textContent = '';
+
+  choicesElement.innerHTML = '<div class="spinner" role="status" aria-label="Loading questions"></div>';
+  nextBtn.classList.add("hidden");
+  submitBtn.classList.add("hidden");
+  backBtn.classList.add("hidden");
+
+  if (questionCounterElement) questionCounterElement.textContent = '';
+  if (progressFillElement) progressFillElement.style.width = '0%';
+  currentChoiceHandler = null;
+} 
+
+// Shown when the fetch fails for any reason.
+export function showError(message, onRetry) {
+  questionElement.classList.remove("question--forward", "question--back", "question--init", "results-reveal");
+  questionElement.textContent = message || "Something went wrong. Please try again.";
+  choicesElement.innerHTML = '';
+  nextBtn.classList.add("hidden");
+  submitBtn.classList.add("hidden");
+  backBtn.classList.add("hidden");
+  currentChoiceHandler = null;
+
+  if (typeof onRetry === "function") {
+    const retryBtn = document.createElement("button");
+    retryBtn.textContent = "Try Again";
+    retryBtn.classList.add("btn", "btn--primary");
+    retryBtn.setAttribute("aria-label", "Retry loading questions");
+    retryBtn.addEventListener("click", onRetry, { once: true }); 
+    choicesElement.appendChild(retryBtn);
+  }
+}
+
+export function renderQuestion(question, handleChoiceSelection, isLastQuestion,selectedAnswer, showBackButton, handleBackCallback, currentQuestionNumber, totalQuestions) {
+  // Guard — if renderQuestion is somehow called with bad data, fail loudly
+  // in development but gracefully in production rather than crashing silently
+  if (!question || !question.choices) {
+  showError("This question could not be displayed.");
+  return;
+  }
+  // NEW — animate question text entrance based on current direction
+  questionElement.classList.remove("question--forward", "question--back", "question--init", "results-reveal");
+  void questionElement.offsetWidth; 
+  questionElement.classList.add(`question--${_transitionDirection}`);
   questionElement.textContent = question.question;
   choicesElement.innerHTML = '';
 
@@ -59,7 +132,6 @@ choicesElement.addEventListener('click', (event) => {
     currentBackHandler = handleBackCallback;
     backBtn.addEventListener('click', currentBackHandler);
   }
-
   currentChoiceHandler = handleChoiceSelection;
 
   //CHECKS IF THE USER ALREADY PICKED AN ANSWER
@@ -80,28 +152,31 @@ choicesElement.addEventListener('click', (event) => {
   question.choices.forEach(choice => {
     const button = document.createElement('button');
     button.textContent = choice;
-    button.classList.add("choice-item");
+    button.classList.add("choice-item"); 
     button.dataset.choice = choice;
-
     button.setAttribute("role", "radio");  
     const isSelected = choice === selectedAnswer;
     button.setAttribute("aria-checked", isSelected ? "true" : "false"); 
-
-    if (isSelected) {
-    button.classList.add("selected"); 
-    }
+    if (isSelected) button.classList.add("selected"); 
+  
    choicesElement.appendChild(button);
   });
+    _transitionDirection = "forward";
 }   
  
 export function showResults(score, total, onPlayAgain) {
+  // A-NEW — results reveal animation
+  questionElement.classList.remove("question--forward", "question--back", "question--init");
+  void questionElement.offsetWidth;
+  questionElement.classList.add("results-reveal");
+
   questionElement.textContent = `Quiz Complete! You scored: ${score} out of ${total}.`;
   choicesElement.innerHTML = '';
   nextBtn.classList.add("hidden");
   submitBtn.classList.add("hidden");
   backBtn.classList.add("hidden");
 
-  if (questionCounterElement) questionCounterElement.textContent = "Quiz Complete"; // NEW
+  if (questionCounterElement) questionCounterElement.textContent = "Quiz Complete"; 
   if (progressFillElement) progressFillElement.style.width = "100%";               
 
   if (currentBackHandler) {
@@ -113,7 +188,7 @@ currentChoiceHandler = null;
   if (typeof onPlayAgain === "function") {
     const playAgainBtn = document.createElement('button');
     playAgainBtn.textContent = "Play Again";
-    playAgainBtn.classList.add("btn", "btn--primary");
+    playAgainBtn.classList.add("btn", "btn--primary", "play-again-btn");
     playAgainBtn.addEventListener('click', onPlayAgain, { once: true });
     choicesElement.appendChild(playAgainBtn);
   }
@@ -150,13 +225,10 @@ export function showConfirmationPopup(onConfirm) {
   };
 
     function handleKeydown(event) {
-    if (event.key === "Escape") {
-      closeModal();
+    if (event.key === "Escape") { closeModal();
       return;
     }
-    if (event.key === "Tab") {
-      trapFocus(event, modalCard);
-    }
+    if (event.key === "Tab") { trapFocus(event, modalCard); }
   }
 
   document.addEventListener("keydown", handleKeydown);
@@ -181,10 +253,8 @@ function trapFocus(event, container) {
   const last = focusable[focusable.length - 1];
 
   if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
-    last.focus();
+    event.preventDefault(); last.focus();
   } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
-    first.focus();
+    event.preventDefault(); first.focus();
   }
 }

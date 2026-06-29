@@ -1,92 +1,133 @@
-/* ============================================================
-   animations.css — ALL @keyframes live here exclusively.
-   Components and states reference these animation names.
-   No selectors or property rules in this file — only @keyframes.
-   ============================================================ */
+/* Progress bar smooth fill — fires automatically when width changes via JS */
+#progress-fill {
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* ----------------------------------------------------------
-   Entry animations
-   ---------------------------------------------------------- */
+/* Question text — directional entrance animations */
+@keyframes questionForward {
+  from { opacity: 0; transform: translateX(22px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
 
-@keyframes fade-in {
+@keyframes questionBack {
+  from { opacity: 0; transform: translateX(-22px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes questionInit {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.question--forward { animation: questionForward 0.28s ease forwards; }
+.question--back    { animation: questionBack    0.28s ease forwards; }
+.question--init    { animation: questionInit    0.32s ease forwards; }
+
+/* Choice buttons — cascade in with staggered delay per child */
+@keyframes choiceEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.choice-item {
+  opacity: 0;
+  animation: choiceEnter 0.24s ease forwards;
+}
+
+.choice-item:nth-child(1) { animation-delay: 0.06s; }
+.choice-item:nth-child(2) { animation-delay: 0.12s; }
+.choice-item:nth-child(3) { animation-delay: 0.18s; }
+.choice-item:nth-child(4) { animation-delay: 0.24s; }
+
+/* Selection pulse — only fires when .pulse class is added via JS click,
+   NOT on state-restored selections */
+@keyframes selectPulse {
+  0%   { transform: scale(1);    }
+  40%  { transform: scale(0.96); }
+  100% { transform: scale(1);    }
+}
+
+.choice-item.pulse {
+  animation: selectPulse 0.18s ease;
+}
+
+/* Invalid attempt shake — applied to Next/Submit button via JS */
+@keyframes shake {
+  0%,  100% { transform: translateX(0);    }
+  15%        { transform: translateX(-7px); }
+  30%        { transform: translateX(7px);  }
+  45%        { transform: translateX(-5px); }
+  60%        { transform: translateX(5px);  }
+  75%        { transform: translateX(-3px); }
+  90%        { transform: translateX(3px);  }
+}
+
+.shake {
+  animation: shake 0.45s ease;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 0, 0, 0.08);
+  border-top-color: var(--color-primary, #6366f1);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 2.5rem auto;
+}
+
+/* Modal overlay and card entrance */
+@keyframes overlayFadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-@keyframes slide-up {
-  from {
-    opacity:   0;
-    transform: translateY(24px);
+@keyframes modalCardEnter {
+  from { opacity: 0; transform: scale(0.94) translateY(14px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+.modal-overlay--visible {
+  animation: overlayFadeIn 0.2s ease forwards;
+}
+
+/* spring curve — slightly overshoots and snaps back, feels satisfying */
+.modal-card {
+  animation: modalCardEnter 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Results screen reveal */
+@keyframes resultsReveal {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+
+.results-reveal {
+  animation: resultsReveal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Play Again button — delayed so it appears after the results text settles */
+@keyframes playAgainEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.play-again-btn {
+  opacity: 0;
+  animation: playAgainEnter 0.3s ease 0.45s forwards;
+}
+
+/* Respect user's reduced-motion preference — accessibility requirement */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-  to {
-    opacity:   1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-down {
-  from {
-    opacity:   0;
-    transform: translateY(-24px);
-  }
-  to {
-    opacity:   1;
-    transform: translateY(0);
-  }
-}
-
-/* ----------------------------------------------------------
-   Feedback animations  (correct / wrong)
-   ---------------------------------------------------------- */
-
-@keyframes pop-correct {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-@keyframes shake-wrong {
-  0%, 100% { transform: translateX(0);  }
-  20%       { transform: translateX(-6px); }
-  40%       { transform: translateX( 6px); }
-  60%       { transform: translateX(-4px); }
-  80%       { transform: translateX( 4px); }
-}
-
-/* ----------------------------------------------------------
-   Progress / loading
-   ---------------------------------------------------------- */
-
-@keyframes progress-fill {
-  from { width: 0%; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1;    }
-  50%      { opacity: 0.55; }
-}
-
-/* ----------------------------------------------------------
-   Celebration (score screen)
-   ---------------------------------------------------------- */
-
-@keyframes bounce-in {
-  0%   { transform: scale(0.3);  opacity: 0; }
-  50%  { transform: scale(1.08); opacity: 1; }
-  70%  { transform: scale(0.95); }
-  100% { transform: scale(1);    }
-}
-
-@keyframes confetti-fall {
-  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
-  100% { transform: translateY(60px)  rotate(360deg); opacity: 0; }
-}
-
-/* ----------------------------------------------------------
-   Timer countdown
-   ---------------------------------------------------------- */
-
-@keyframes countdown-tick {
-  0%   { transform: scale(1.2); }
-  100% { transform: scale(1);   }
 }

@@ -1,3 +1,5 @@
+import { saveProgress, clearProgress } from "./storage.js";
+
 // CONSTANT VARIABLES - STORES DATA 
 export const state = {
   currentQuestionIndex: 0,
@@ -6,7 +8,8 @@ export const state = {
   quizFinished: false,
   selectedCategory: null,
   activeQuestions: [],
-  answers: []
+  answers: [], 
+  status: "idle" //LOADING | SUCCESS | ERROR
 };
 
 //1. READ STATE
@@ -16,6 +19,7 @@ export function getState() {
 //2.UPDATE
 export function updateState(key, value) {
   state[key] = value;
+  saveProgress(state);
 }
 
 //3. RESET 
@@ -27,4 +31,6 @@ export function resetState() {
   state.activeQuestions = [];  
   state.selectedCategory = null; 
   state.answers = [];
+  state.status = "idle"; 
+  clearProgress(); 
 }
